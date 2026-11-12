@@ -3,7 +3,6 @@ __pycache__/
 data/
 
 # Versi lama & eksperimen
-deepseek_tes[0-9]*.py
 dirgahayu_ramian*.py
 fb_gql_reg_ORIG*.py
 
@@ -26,3 +25,52 @@ wa-bot-test/
 # Fendi source (referensi)
 Auto_fendi.py
 fendi_*.py
+
+# Versi historis deepseek_tes (evolusi ke deepseek_tes6su.py)
+# Match: deepseek_tes.py, deepseek_tes2.py..deepseek_tes5.py, deepseek_tes6.py
+# TIDAK match: deepseek_tes6su.py (tetap tracked)
+deepseek_tes.py
+deepseek_tes[0-9].py
+
+# Eksperimen & referensi (tidak terkait project aktif)
+hipotyu.py
+sugir.py
+No.py
+intervensi.py
+indo-1-FINAL-PRODUCTION-1.py
+resend_updt.py
+resend_updt_1.py
+
+# IG tools (belum relevan)
+sc_ig_version_4py
+sc_ig_version_5py
+sc_ig_version_*.py
+ig.zip
+Ig_A2f_dari_fendi.py
+
+# Fendi source (referensi untuk port fb_a2f.py nanti)
+Auto_fendi.py
+fendi_*.py
+
+# Backup fb_gql_reg versi lama
+fb_gql_reg_ORIG*.py
+
+# Bot (project terpisah)
+bot.js
+package.json
+wa-bot-test/
+
+# Data root
+email.txt
+email_used.txt
+voip.txt
+voip_used.txt
+
+# Catatan: Cookie/ TIDAK di-ignore
+# Alasan: Cookie/ berisi HASIL akun verified dari project ini
+# Kalau nanti di-ignore, hasil akan hilang dari git tracking
+
+# Cookie/ berisi kredensial aktif (c_user + xs)
+# JANGAN di-commit — risiko account takeover
+Cookie/
+cookies*.txt
