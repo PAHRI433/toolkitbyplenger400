@@ -1,3 +1,28 @@
 *.bak_*
 __pycache__/
 data/
+
+# Versi lama & eksperimen
+deepseek_tes[0-9]*.py
+dirgahayu_ramian*.py
+fb_gql_reg_ORIG*.py
+
+# IG tools
+sc_ig_version_*.py
+ig.zip
+Ig_A2f_dari_fendi.py
+
+# Data (root)
+email.txt
+email_used.txt
+voip.txt
+voip_used.txt
+
+# Bot (project terpisah)
+bot.js
+package.json
+wa-bot-test/
+
+# Fendi source (referensi)
+Auto_fendi.py
+fendi_*.py
