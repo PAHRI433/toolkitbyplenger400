@@ -30,7 +30,6 @@ fendi_*.py
 # Match: deepseek_tes.py, deepseek_tes2.py..deepseek_tes5.py, deepseek_tes6.py
 # TIDAK match: deepseek_tes6su.py (tetap tracked)
 deepseek_tes.py
-deepseek_tes[0-9].py
 
 # Eksperimen & referensi (tidak terkait project aktif)
 hipotyu.py
@@ -78,3 +77,9 @@ cookies*.txt
 # Cookie/ berisi kredensial aktif — JANGAN di-commit
 Cookie/
 cookies*.txt
+
+# Versi historis deepseek_tes — cover semua kecuali 6su.py
+# Match: deepseek_tes.py, deepseek_tes2.py..5.py, deepseek_tes5_INTEGRATED*.py, deepseek_tes6.py
+# TIDAK match: deepseek_tes6su.py
+deepseek_tes.py
+deepseek_tes[0-9]*.py
