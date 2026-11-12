@@ -74,3 +74,7 @@ voip_used.txt
 # JANGAN di-commit — risiko account takeover
 Cookie/
 cookies*.txt
+
+# Cookie/ berisi kredensial aktif — JANGAN di-commit
+Cookie/
+cookies*.txt
