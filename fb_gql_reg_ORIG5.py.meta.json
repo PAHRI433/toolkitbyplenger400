@@ -1,0 +1,16 @@
+{
+  "orig_number": 5,
+  "archive_file": "fb_gql_reg_ORIG5.py",
+  "archive_date": "2026-11-14 07:54:40",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "confirmation_success lebih cepat dicek, dan HandleLoginResponse kemungkinan tinggi sukses juga",
+  "tested": true,
+  "breaking_changes": true,
+  "size_bytes": 47535,
+  "lines": 1007,
+  "md5": "26b0ac68e67f9647235a6377de4857bb",
+  "git_hash": "de078ee",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG5.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}

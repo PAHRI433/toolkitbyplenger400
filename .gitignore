@@ -4,7 +4,7 @@ data/
 
 # Versi lama & eksperimen
 dirgahayu_ramian*.py
-fb_gql_reg_ORIG*.py
+# [DISABLED 2026-11-14] fb_gql_reg_ORIG*.py
 
 # IG tools
 sc_ig_version_*.py
@@ -52,7 +52,7 @@ Auto_fendi.py
 fendi_*.py
 
 # Backup fb_gql_reg versi lama
-fb_gql_reg_ORIG*.py
+# [DISABLED 2026-11-14] fb_gql_reg_ORIG*.py
 
 # Bot (project terpisah)
 bot.js

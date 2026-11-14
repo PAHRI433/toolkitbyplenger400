@@ -30,6 +30,13 @@ except ImportError:
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+# Update : promote_fb_gql jum,13 nov 2026
+try:
+    from promote_fb_gql import promote as promote_gql, list_archives
+    _PROMOTE_OK = True
+except ImportError:
+    _PROMOTE_OK = False
+
 # ── PATCH: GraphQL registration module ──
 try:
     from fb_gql_reg import register_and_verify, parse_cookie_string
@@ -1116,6 +1123,190 @@ BIOS = [
     "Blessed and grateful every day",
 ]
 
+# ══════════════════════════════════════════════════════════════
+# [PATCH v5] FUNGSI LAMA TETAP ADA — cuma gak dipanggil
+# ══════════════════════════════════════════════════════════════
+
+def _try_verify_domain(domain_cfg, uid, cookies_dict, headers, text, url, base, otp,
+                        service=None, contact_email=None, token=None, check_sess=None):
+    """[LEGACY — gak dipakai lagi] Verify email via HTML scraping."""
+    x_base = domain_cfg["domain"]
+    x_conf_url = f"{x_base}{domain_cfg['confirmemail_path']}"
+    print_status(f"🌐 Mencoba domain: {domain_cfg['name']}", "info")
+    x_hdrs = {
+        'User-Agent': get_otp_user_agent(),
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+        'Connection': 'keep-alive',
+    }
+    v_sess = create_verification_session(cookies_dict)
+    page = ""
+    for _attempt in range(3):
+        try:
+            r_x = v_sess.get(x_conf_url, headers=x_hdrs, timeout=20)
+            page = r_x.text
+            break
+        except Exception as _ce:
+            print_status(f"⚠ GET token [{domain_cfg['name']}] {_attempt+1}/3: {str(_ce)[:50]}", "warn")
+            human_delay('after_submit')
+            v_sess = create_verification_session(cookies_dict)
+            continue
+    if not page:
+        print_status(f"❌ GET kosong [{domain_cfg['name']}]", "warn")
+        return False, None
+    lsd_m = re.search(r'"LSD",\s*\[\],\s*{"token":"(.*?)"', page)
+    dtsg_m = re.search(r'"dtsg":\s*{"token":"(.*?)"', page)
+    if not (lsd_m and dtsg_m):
+        print_status(f"❌ Token x.fb MISS [{domain_cfg['name']}]", "warn")
+        return False, None
+    return False, None
+
+
+def verify_email_after_uid(uid, cookies_dict, headers, existing_session=None,
+                            contact_email=None, service=None, token=None):
+    """[LEGACY — gak dipakai lagi] Verify email setelah UID via HTML."""
+    print_status("[LEGACY] verify_email_after_uid dipanggil — skip (pakai GraphQL)", "warn")
+    return False, None
+
+
+def handle_otp_checkpoint(submit_resp, headers, voip_number):
+    """[LEGACY — gak dipakai lagi] Handle checkpoint OTP via HTML."""
+    print_status("[LEGACY] handle_otp_checkpoint dipanggil — skip (pakai GraphQL)", "warn")
+    return False, None
+
+
+# ============================================================
+# 🔧 WARMWAP
+# ============================================================
+def warmup_profile(uid, cookies_dict, full_name, gender):
+    print_status(f"Warmup profile untuk UID {uid}...", "loading")
+
+    warm = requests.Session()
+    warm.verify = False
+
+    for k, v in cookies_dict.items():
+        warm.cookies.set(k, v, domain='.facebook.com')
+        warm.cookies.set(k, v, domain='mbasic.facebook.com')
+
+    ua_hdrs = get_ua_headers()
+    ua = ua_hdrs['user-agent']
+    base = "https://mbasic.facebook.com"
+
+    headers = {
+        'User-Agent': ua,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Connection': 'keep-alive',
+    }
+
+    try:
+        human_delay('warmup_initial')
+        r_home = warm.get(f"{base}/", headers=headers, timeout=15, allow_redirects=True)
+        _final_url = r_home.url.lower()
+        print_status(f"Browse beranda: {r_home.status_code} | URL: {_final_url[:70]}", "info")
+        if 'confirmemail' in _final_url:
+            print_status(f"[WARMUP-SKIP] Email belum verified (confirmemail.php)", "warn")
+            return False
+        if 'checkpoint' in _final_url:
+            print_status(f"[WARMUP-SKIP] Checkpoint detected", "warn")
+            return False
+        human_delay('warmup_between')
+    except Exception as e:
+        print_status(f"Gagal browse beranda: {e}", "warn")
+        return False
+
+    try:
+        human_delay('warmup_between')
+        prof = warm.get(f"{base}/profile.php?id={uid}", headers=headers, timeout=15, allow_redirects=True)
+        print_status(f"Profile loaded: {prof.status_code}", "info")
+        human_delay('warmup_between')
+    except Exception as e:
+        print_status(f"Gagal load profile: {e}", "warn")
+        return False
+
+    try:
+        human_delay('warmup_before_edit')
+        about = warm.get(f"{base}/profile.php?id={uid}&v=about", headers=headers, timeout=15, allow_redirects=True)
+        tokens = {}
+        lsd_m = re.search(r'name="lsd"\s*value="([^"]+)"', about.text, re.I)
+        dtsg_m = re.search(r'name="fb_dtsg"\s*value="([^"]+)"', about.text, re.I)
+        if lsd_m:
+            tokens['lsd'] = lsd_m.group(1)
+        if dtsg_m:
+            tokens['fb_dtsg'] = dtsg_m.group(1)
+        if not tokens.get('lsd'):
+            for key in ['lsd', 'fb_dtsg']:
+                m = re.search(rf'"{key}":"([^"]+)"', about.text)
+                if m:
+                    tokens[key] = m.group(1)
+        human_delay('warmup_between')
+    except Exception as e:
+        print_status(f"Gagal load about: {e}", "warn")
+        tokens = {}
+
+    hpost = dict(headers)
+    hpost['Content-Type'] = 'application/x-www-form-urlencoded'
+    hpost['Origin'] = base
+    hpost['Referer'] = f"{base}/profile.php?id={uid}&v=about"
+
+    city = random.choice(CITIES_MG)
+    bio = random.choice(BIOS)
+
+    try:
+        human_think_pause()
+        hometown_data = {
+            'lsd': tokens.get('lsd', ''),
+            'fb_dtsg': tokens.get('fb_dtsg', ''),
+            'hometown': city,
+            'submit': 'Save',
+        }
+        for _ in range(min(len(city), 15)):
+            time.sleep(random.uniform(0.05, 0.15))
+        r = warm.post(f"{base}/profile/edit/basic", data=hometown_data, headers=hpost, timeout=15, allow_redirects=True)
+        print_status(f"Hometown '{city}' updated: {r.status_code}", "success")
+        human_delay('warmup_between')
+    except Exception as e:
+        print_status(f"Gagal update hometown: {e}", "warn")
+
+    try:
+        human_think_pause()
+        bio_data = {
+            'lsd': tokens.get('lsd', ''),
+            'fb_dtsg': tokens.get('fb_dtsg', ''),
+            'biography': bio,
+            'submit': 'Save',
+        }
+        for _ in range(min(len(bio), 20)):
+            time.sleep(random.uniform(0.08, 0.2))
+        r2 = warm.post(f"{base}/profile/edit/bio", data=bio_data, headers=hpost, timeout=15, allow_redirects=True)
+        print_status(f"Bio updated: {r2.status_code}", "success")
+        human_delay('warmup_between')
+    except Exception as e:
+        print_status(f"Gagal update bio: {e}", "warn")
+
+    try:
+        human_delay('warmup_initial')
+        warm.get(f"{base}/", headers=headers, timeout=15)
+        print_status("Browse beranda: OK", "info")
+    except:
+        pass
+
+    print_status(f"Warmup selesai! Kota: {city} | Bio: {bio[:30]}...", "success")
+    return True
+
+
+def fblite_trigger_sms(contact, password, cookies_dict, max_resend=5):
+    return False
+
+
+# ══════════════════════════════════════════════════════════════
+# [PATCH v5] OTP GETTER UNTUK GRAPHQL REGISTRAR
+# ══════════════════════════════════════════════════════════════
 def _otp_getter_for_gql(email):
     """
     Wrapper buat fb_gql_reg.register_and_verify().
@@ -2365,21 +2556,22 @@ def main():
                style="primary")
 
     print_button("Create Single Account", "1", "primary")
-    print_button("Create Bulk Accounts",  "2", "action")
-    print_button("Toggle Proxy Mode",     "3", "secondary")
-    print_button("Set Default Password",  "6", "secondary")
-    print_button("Parser Hasil Akun",      "7", "secondary")
-    print_button("Parse Email dari Teks",  "8", "secondary")
-    print_button("Parse Nomor dari Teks",  "10", "secondary")
-    print_button("📥 Export XLSX Instant",  "9", "action")
+    print_button("Create Bulk Accounts", "2", "action")
+    print_button("Toggle Proxy Mode", "3", "secondary")
+    print_button("Set Default Password", "6", "secondary")
+    print_button("Parser Hasil Akun", "7", "secondary")
+    print_button("Parse Email dari Teks", "8", "secondary")
+    print_button("Parse Nomor dari Teks", "10", "secondary")
+    print_button("📥 Export XLSX Instant", "9", "action")
     print_button("🔑 Set API Key SAAS", "11", "secondary")
     print_button("🔄 Toggle Reuse Failed Emails", "12", "secondary")
     print_button("🧹 Clear Failed Email Queue", "13", "secondary")
-    print_button("📋 Lihat Queue Reuse Email", "14", "secondary")
+    print_button("Lihat Queue Reuse Email", "14", "secondary")
     print_button("🌐 Toggle OTP User-Agent", "16", "secondary")
-    print_button("Exit",                  "4", "secondary")
+    print_button("📦 Promote fb_gql_debug → fb_gql_reg", "17", "action")
+    print_button("Exit", "4", "secondary")
 
-    choice = print_input_field("Choose Option", "[1-16]")
+    choice = print_input_field("Choose Option", "[1-17]")
 
     if choice == '3':
         with proxy_mode_lock:
@@ -2568,6 +2760,24 @@ def main():
 
     if choice == '16':
         toggle_otp_ua()
+        input("\nEnter...")
+        main()
+        return
+
+    if choice == '17':
+        clear()
+        print_gradient_header()
+        if not _PROMOTE_OK:
+            print_status("promote_fb_gql.py tidak ada di folder project", "error")
+            print_status("Buat dulu: ~/downloads/promote_fb_gql.py", "info")
+        else:
+            print_card("PROMOTE fb_gql_debug.py → fb_gql_reg.py",
+                       "Arsip production → ORIG(n), lalu replace dengan debug",
+                       style="primary")
+            try:
+                promote_gql()
+            except Exception as e:
+                print_status(f"Promote error: {e}", "error")
         input("\nEnter...")
         main()
         return

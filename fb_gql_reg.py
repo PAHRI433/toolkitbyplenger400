@@ -766,7 +766,10 @@ class FBRegistrar:
         }
         r = self._gql('com.bloks.www.bloks.caa.reg.confirmation.async', sp, cip, host=GRAPHQL_ZM)
         t = r.text.replace('\\', '')
+        if 'confirmation_success' in t: status = 'success'
         if 'HandleLoginResponse' in t:
+            status = 'success'
+        elif 'confirmation_success' in t:
             status = 'success'
         elif '"CAA_REG_CONFIRMATION:is_confirmed","mode":"p","initial":true' in t:
             status = 'success'
