@@ -123,25 +123,27 @@ Main script punya 18 menu (dikelompokkan):
 
 ## Arsitektur Singkat
 
+```text
 deepseek_tes6su.py (main — orchestrator)
 │
 ├── [1][2] Registrasi akun
-│ ├── generate_email() ← SAAS API / fallback mailegzz
-│ ├── poll_email_otp_enhanced() ← OTP polling (multi-provider)
-│ └── fb_gql_reg.register_and_verify()
-│ ├── FBRegistrar (9-step GraphQL flow)
-│ ├── submit_otp() ← Layer 1: OTP status
-│ └── check_session() ← Layer 2: Account status
+│   ├── generate_email()            ← SAAS API / fallback mailegzz
+│   ├── poll_email_otp_enhanced()   ← OTP polling (multi-provider)
+│   └── fb_gql_reg.register_and_verify()
+│       ├── FBRegistrar (9-step GraphQL flow)
+│       ├── submit_otp()            ← Layer 1: OTP status
+│       └── check_session()         ← Layer 2: Account status
 │
 ├── [17] Promote fb_gql_reg.py
-│ └── promote_fb_gql.promote()
-│ └── arsip → ORIG(n) + .meta.json + INDEX.md
+│   └── promote_fb_gql.promote()
+│       └── arsip → ORIG(n) + .meta.json + INDEX.md
 │
 └── [18] Promote deepseek_tes6su.py
-└── promote_tes6su.promote()
-└── arsip → ORIG(n) + .meta.json + INDEX.md
+    └── promote_tes6su.promote()
+        └── arsip → ORIG(n) + .meta.json + INDEX.md
+```
 
-**Key insight — 3 Layer Status (jangan dicampur):**
+**Key insight — 3 Layer Status (jangan dicampur):****Key insight — 3 Layer Status (jangan dicampur):**
 
 | Layer | Sumber | Nilai | Penentu log label? |
 |-------|--------|-------|--------------------|
