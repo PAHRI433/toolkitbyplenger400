@@ -30,43 +30,45 @@ ada backup, tidak ada rollback.
 
 ## Struktur Project
 
+```text
 ~/downloads/
-├── README.md ← kamu di sini
-├── deepseek_tes6su.py ← main script (entry point, menu 1-18)
-├── fb_gql_reg.py ← module registrasi GraphQL (dipakai main)
-├── promote_fb_gql.py ← tooling menu 17 (arsip fb_gql_reg.py)
-├── promote_tes6su.py ← tooling menu 18 (arsip deepseek_tes6su.py)
+├── README.md                    ← kamu di sini
+├── deepseek_tes6su.py           ← main script (entry point, menu 1-18)
+├── fb_gql_reg.py                ← module registrasi GraphQL (dipakai main)
+├── promote_fb_gql.py            ← tooling menu 17 (arsip fb_gql_reg.py)
+├── promote_tes6su.py            ← tooling menu 18 (arsip deepseek_tes6su.py)
 │
-├── legacy/ ← fungsi dorman/deprecated (tidak dipanggil)
-│ ├── README.md ← registry: status + cara reaktivasi
-│ ├── warmup.py
-│ ├── fblite_sms.py
-│ └── verify_legacy.py
+├── legacy/                      ← fungsi dorman/deprecated (tidak dipanggil)
+│   ├── README.md                ← registry: status + cara reaktivasi
+│   ├── warmup.py
+│   ├── fblite_sms.py
+│   └── verify_legacy.py
 │
-├── _docs/ ← dokumentasi (baca sesuai kebutuhan)
-│ ├── QUICKSTART.md
-│ ├── architecture.md
-│ ├── promote.md
-│ └── CONTRIBUTING.md
+├── _docs/                       ← dokumentasi (baca sesuai kebutuhan)
+│   ├── QUICKSTART.md
+│   ├── architecture.md
+│   ├── promote.md
+│   └── CONTRIBUTING.md
 │
-├── data/ ← runtime data (gitignored)
-│ ├── logs/ ← log registrasi per hari
-│ ├── debug/ ← HTML dump dari fail case
-│ └── result/ ← akun sukses (.json, .xlsx)
+├── data/                        ← runtime data (gitignored)
+│   ├── logs/                    ← log registrasi per hari
+│   ├── debug/                   ← HTML dump dari fail case
+│   └── result/                  ← akun sukses (.json, .xlsx)
 │
-├── INDEX.md ← riwayat promote (unified menu 17 + 18)
-├── fb_gql_reg_ORIG.py ← arsip fb_gql_reg.py (byte-identik)
-├── fb_gql_reg_ORIG.py.meta.json ← metadata arsip
-├── deepseek_tes6su_ORIG*.py ← arsip deepseek_tes6su.py
+├── INDEX.md                     ← riwayat promote (unified menu 17 + 18)
+├── fb_gql_reg_ORIG*.py          ← arsip fb_gql_reg.py (byte-identik)
+├── fb_gql_reg_ORIG*.py.meta.json ← metadata arsip
+├── deepseek_tes6su_ORIG*.py     ← arsip deepseek_tes6su.py
 │
-└── (file lain yang di-gitignore) ← eksperimen, historis, referensi
+└── (file lain yang di-gitignore)  ← eksperimen, historis, referensi
+```
 
-**Credential** (cookie FB aktif) disimpan di **`~/.fb_credentials/`** — di luar
+**Credential** (cookie FB aktif) disimpan di **~/.fb_credentials/** — di luar
 repo ini, sengaja tidak masuk git. Kalau kamu butuh akses akun, baca dari sana.
 
 ---
 
-## Konvensi Penamaan File
+## Konvensi Penamaan File## Konvensi Penamaan File## Konvensi Penamaan File
 
 Prefix/suffix menentukan **peran** file. Jangan campur:
 
