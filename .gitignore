@@ -83,3 +83,6 @@ cookies*.txt
 # TIDAK match: deepseek_tes6su.py
 deepseek_tes.py
 deepseek_tes[0-9]*.py
+
+# Pengecualian biar arsip auto-promote tetap ke-track
+!deepseek_tes6su_ORIG*.py
