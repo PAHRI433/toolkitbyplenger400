@@ -143,7 +143,7 @@ deepseek_tes6su.py (main — orchestrator)
         └── arsip → ORIG(n) + .meta.json + INDEX.md
 ```
 
-**Key insight — 3 Layer Status (jangan dicampur):****Key insight — 3 Layer Status (jangan dicampur):**
+**Key insight — 3 Layer Status (jangan dicampur):****
 
 | Layer | Sumber | Nilai | Penentu log label? |
 |-------|--------|-------|--------------------|
