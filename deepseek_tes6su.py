@@ -32,6 +32,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Update : promote_fb_gql jum,13 nov 2026
 try:
+    from promote_tes6su import promote as promote_tes6su
+    _PROMOTE_TES6SU_OK = True
+except ImportError:
+    _PROMOTE_TES6SU_OK = False
+
+try:
     from promote_fb_gql import promote as promote_gql, list_archives
     _PROMOTE_OK = True
 except ImportError:
@@ -2569,9 +2575,10 @@ def main():
     print_button("Lihat Queue Reuse Email", "14", "secondary")
     print_button("🌐 Toggle OTP User-Agent", "16", "secondary")
     print_button("📦 Promote fb_gql_debug → fb_gql_reg", "17", "action")
+    print_button("📦 Promote tes6su_promote → deepseek_tes6su", "18", "action")
     print_button("Exit", "4", "secondary")
 
-    choice = print_input_field("Choose Option", "[1-17]")
+    choice = print_input_field("Choose Option", "[1-18]")
 
     if choice == '3':
         with proxy_mode_lock:
@@ -2760,6 +2767,22 @@ def main():
 
     if choice == '16':
         toggle_otp_ua()
+        input("\nEnter...")
+        main()
+        return
+
+    if choice == '18':
+        clear()
+        print_gradient_header()
+        if not _PROMOTE_TES6SU_OK:
+            print_status("promote_tes6su.py tidak ada di folder project", "error")
+        else:
+            print_card("PROMOTE tes6su_promote.py → deepseek_tes6su.py",
+                       "Arsip production → ORIG(n), lalu replace dengan debug", style="primary")
+            try:
+                promote_tes6su()
+            except Exception as e:
+                print_status(f"Promote error: {e}", "error")
         input("\nEnter...")
         main()
         return
