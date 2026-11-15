@@ -983,15 +983,30 @@ def register_and_verify(email, first, last, bday, bmonth, byear,
     st = reg.check_session() if reg.cookie_str else None
     log(f"[FBReg] session check: {st}")
 
-    verified = (status == 'success') or (st == 'LIVE')
+    otp_status = status
+    account_status = st
+
+    # LAYER 3 LOGIC: Hanya LIVE yang dianggap VERIFIED
+    verified = (account_status == 'LIVE')
+
+    if verified:
+        reason = None
+    elif account_status:
+        reason = f"account_{account_status.lower()}"
+    elif otp_status != 'success':
+        reason = f"otp_{otp_status}_no_session"
+    else:
+        reason = "no_cookie"
 
     return {
         'success': True,
         'uid': reg.UID,
         'cookie': reg.cookie_str,
         'verified': verified,
-        'status': st,
-        'reason': None if verified else f'otp_{status}',
+        'account_status': account_status,  # Baru: Layer 2
+        'otp_status': otp_status,          # Baru: Layer 1
+        'status': account_status,          # Backward compat
+        'reason': reason,
     }
 
 

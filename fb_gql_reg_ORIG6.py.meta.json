@@ -1,0 +1,16 @@
+{
+  "orig_number": 6,
+  "archive_file": "fb_gql_reg_ORIG6.py",
+  "archive_date": "2026-11-15 12:35:23",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "refactor Layer 1 & 2 (strict verified)",
+  "tested": true,
+  "breaking_changes": true,
+  "size_bytes": 47608,
+  "lines": 1009,
+  "md5": "4830540a8bae13c4af79d8a206327ea0",
+  "git_hash": "11baff6",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG6.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
