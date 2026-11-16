@@ -1650,9 +1650,14 @@ def save_to_xlsx(accounts, filepath=None):
             return None
 
     wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "FB Accounts"
+    
+    # Buat 3 worksheet
+    ws_live = wb.active
+    ws_live.title = "AKUN LIVE"
+    ws_checkpoint = wb.create_sheet("AKUN CHECKPOINT")
+    ws_other = wb.create_sheet("AKUN LAINNYA")
 
+    # Styling config
     header_fill = PatternFill("solid", fgColor="1877F2")
     header_font = Font(bold=True, color="FFFFFF", size=11)
     center_align = Alignment(horizontal="center", vertical="center")
@@ -1663,40 +1668,56 @@ def save_to_xlsx(accounts, filepath=None):
 
     headers_row = ["UID", "Password", "Cookies", "Email"]
     col_widths = [22, 20, 80, 35]
-    ws.row_dimensions[1].height = 22
 
-    for col_idx, (hdr, w) in enumerate(zip(headers_row, col_widths), start=1):
-        cell = ws.cell(row=1, column=col_idx, value=hdr)
-        cell.fill = header_fill
-        cell.font = header_font
-        cell.alignment = center_align
-        cell.border = thin_border
-        ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = w
-
-    for row_idx, acc in enumerate(accounts, start=2):
-        uid = acc.get("uid", "")
-        pw = acc.get("password", "")
-        cookie = acc.get("cookie", "")
-        email = acc.get("email", "")
-        row_data = [uid, pw, cookie, email]
-        fill = fill_even if row_idx % 2 == 0 else fill_odd
-        ws.row_dimensions[row_idx].height = 18
-        for col_idx, val in enumerate(row_data, start=1):
-            cell = ws.cell(row=row_idx, column=col_idx, value=str(val))
-            cell.fill = fill
-            cell.alignment = Alignment(vertical="center", wrap_text=(col_idx == 3))
+    def _write_sheet(ws, data_list):
+        ws.row_dimensions[1].height = 22
+        for col_idx, (hdr, w) in enumerate(zip(headers_row, col_widths), start=1):
+            cell = ws.cell(row=1, column=col_idx, value=hdr)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = center_align
             cell.border = thin_border
-            if col_idx == 1:
-                cell.font = Font(bold=True, size=10)
+            ws.column_dimensions[ws.cell(row=1, column=col_idx).column_letter].width = w
 
-    ws.freeze_panes = "A2"
+        for row_idx, acc in enumerate(data_list, start=2):
+            uid = acc.get("uid", "")
+            pw = acc.get("password", "")
+            cookie = acc.get("cookie", "")
+            email = acc.get("email", "")
+            row_data = [uid, pw, cookie, email]
+            fill = fill_even if row_idx % 2 == 0 else fill_odd
+            ws.row_dimensions[row_idx].height = 18
+            for col_idx, val in enumerate(row_data, start=1):
+                cell = ws.cell(row=row_idx, column=col_idx, value=str(val))
+                cell.fill = fill
+                cell.alignment = Alignment(vertical="center", wrap_text=(col_idx == 3))
+                cell.border = thin_border
+                if col_idx == 1:
+                    cell.font = Font(bold=True, size=10)
+        ws.freeze_panes = "A2"
+
+    # Klasifikasi akun berdasarkan account_status
+    live_accs, cp_accs, other_accs = [], [], []
+    for acc in accounts:
+        st = str(acc.get("account_status") or acc.get("status") or "").upper()
+        if st == "LIVE":
+            live_accs.append(acc)
+        elif st == "CHECKPOINT":
+            cp_accs.append(acc)
+        else:
+            other_accs.append(acc)
+
+    # Tulis ke worksheet masing-masing
+    _write_sheet(ws_live, live_accs)
+    _write_sheet(ws_checkpoint, cp_accs)
+    _write_sheet(ws_other, other_accs)
+
     os.makedirs("data/result/export", exist_ok=True)
     if not filepath:
         ts = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
         filepath = f"data/result/export/akun_fb_{ts}.xlsx"
     wb.save(filepath)
     return filepath
-
 
 def parse_and_export_xlsx(filepath=None):
     clear()
