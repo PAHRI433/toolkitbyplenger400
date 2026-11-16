@@ -739,6 +739,10 @@ class FBRegistrar:
     # SUBMIT OTP (GraphQL — kunci utama patch ini)
     # ══════════════════════════════════════════════════════════
     def submit_otp(self, code, text_input_id=None):
+        # [FB-SENSOR] Bongkar UA asli yang dipakai nembak GraphQL FB
+        _real_ua = self.head.get('user-agent', 'N/A')
+        print(f"\n\033[35m[FB-SENSOR] UA yang dikirim ke Facebook saat Submit OTP:\033[0m\n{_real_ua}\n")
+
         sp = {
             'event_request_id': self._erid(),
             'is_from_logged_out': 0,

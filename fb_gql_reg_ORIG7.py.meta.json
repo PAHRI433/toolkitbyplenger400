@@ -1,0 +1,16 @@
+{
+  "orig_number": 7,
+  "archive_file": "fb_gql_reg_ORIG7.py",
+  "archive_date": "2026-11-16 13:32:57",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "tambah sensor log UA submit OTP FB",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 48064,
+  "lines": 1024,
+  "md5": "f67ec0a73450d75ed9761642642dfcee",
+  "git_hash": "94d5615",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG7.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
