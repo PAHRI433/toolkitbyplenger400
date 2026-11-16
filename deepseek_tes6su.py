@@ -1584,6 +1584,7 @@ def create_account(full_name, email, password, gender, use_phone=False, locale_c
 
     # ── Update XLSX ──
     _xlsx_path = f'data/result/create/akun_fb_{tanggal}.xlsx'
+    print_status(f"Menyimpan data ke Excel: {os.path.basename(_xlsx_path)}...", "loading")
     try:
         existing = []
         json_file = f'data/result/create/sukses-{tanggal}.json'
@@ -1596,24 +1597,38 @@ def create_account(full_name, email, password, gender, use_phone=False, locale_c
                             existing.append(json.loads(_l))
                         except:
                             pass
-        save_to_xlsx(existing, _xlsx_path)
-    except:
-        pass
+        res_path = save_to_xlsx(existing, _xlsx_path)
+        if res_path:
+            print_status(f"✅ Sukses simpan Excel: {res_path} ({len(existing)} akun)", "success")
+        else:
+            print_status("❌ Gagal simpan Excel (cek modul openpyxl)", "error")
+    except Exception as e:
+        print_status(f"❌ Error saat simpan Excel: {e}", "error")
 
-    # ── Print card ──
-    if _verified:
-        print_card("✓ AKUN VERIFIED", f"""UID      : {uid}
+    # ── Print card (Refactored Layer 3) ──
+    _acc_status = result.get('account_status') or result.get('status')
+    _otp_status = result.get('otp_status') or 'unknown'
+    
+    card_data = f"""UID      : {uid}
 Password : {password}
 Email    : {email}
-Status   : {status}
-Cookie   : {final_cookie_str[:60]}...""", style="success")
-    else:
-        print_card("⚠ AKUN UNVERIFIED", f"""UID      : {uid}
-Password : {password}
-Email    : {email}
-Status   : {status}
+OTP      : {_otp_status}
 Reason   : {result.get('reason')}
-Cookie   : {final_cookie_str[:60]}...""", style="warn")
+Cookie   : {final_cookie_str[:60]}..."""
+
+    if _acc_status == 'LIVE':
+        print_card("✓ AKUN VERIFIED", card_data, style="success")
+    elif _acc_status == 'CHECKPOINT':
+        print_card("⚠ AKUN CHECKPOINT", card_data, style="warn")
+        add_failed_email(email)
+    elif _acc_status == 'UNCONFIRMED':
+        print_card("⚠ AKUN UNCONFIRMED", card_data, style="warn")
+        add_failed_email(email)
+    elif _acc_status == 'DIED':
+        print_card("❌ AKUN GAGAL (DIED)", card_data, style="error")
+        add_failed_email(email)
+    else:
+        print_card(f"⚠ AKUN STATUS {str(_acc_status).upper()}", card_data, style="warn")
         add_failed_email(email)
 
     return (True, email, _verified)
