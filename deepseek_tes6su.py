@@ -2609,7 +2609,7 @@ def main():
     print_button("🔄 Toggle Reuse Failed Emails", "12", "secondary")
     print_button("🧹 Clear Failed Email Queue", "13", "secondary")
     print_button("Lihat Queue Reuse Email", "14", "secondary")
-    print_button("🌐 Toggle OTP User-Agent", "16", "secondary")
+    print_button("🌐 [UNUSED] Toggle OTP User-Agent", "16", "secondary")
     print_button("📦 Promote fb_gql_debug → fb_gql_reg", "17", "action")
     print_button("📦 Promote tes6su_promote → deepseek_tes6su", "18", "action")
     print_button("Exit", "4", "secondary")
