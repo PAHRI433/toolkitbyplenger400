@@ -1,0 +1,16 @@
+{
+  "orig_number": 17,
+  "archive_file": "fb_gql_reg_ORIG17.py",
+  "archive_date": "2026-11-17 13:00:52",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Patch Sensor Dump HTML : reg_contactpoint_email ke dalam file, lalu kita cari pola token faktual",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 49915,
+  "lines": 1067,
+  "md5": "9916b5e839c89169fdfcbe10fa126807",
+  "git_hash": "64c05d5",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG17.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}

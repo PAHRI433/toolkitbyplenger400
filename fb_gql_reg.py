@@ -620,6 +620,13 @@ class FBRegistrar:
         ok = r.status_code == 200
         if ok:
             self.CTX = self._extract_context(r.text) or self.CTX
+            # [SENSOR DUMP] Simpan response jika CTX None
+            if not self.CTX:
+                import os
+                os.makedirs('data/debug', exist_ok=True)
+                with open('data/debug/ctx_dump.txt', 'w', encoding='utf-8') as f_dump:
+                    f_dump.write(r.text)
+                print("\n\033[31m[FB-SENSOR] CTX Gagal di-extract! Respons disimpan di data/debug/ctx_dump.txt\033[0m")
         return ok
 
     def reg_password(self):
