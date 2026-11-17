@@ -646,7 +646,7 @@ class FBRegistrar:
         cip = {
             'safetynet_response': '', 'caa_play_integrity_attestation_result': '',
             'aac': self.AAC,
-            'safetynet_token': base64.b64encode(f'unknown|{int(time.time())}|'.encode() + os.urandom(24)).decode(),
+            'safetynet_token': '', # [EKSPERIMEN] Kosongkan token SafetyNet palsu
             'zero_balance_state': '', 'network_bssid': None,
             'machine_id': self.MID, 'headers_last_infra_flow_id_safetynet': '',
             'system_permissions_status': {'READ_CONTACTS': 'UNKNOWN', 'GET_ACCOUNTS': 'UNKNOWN',

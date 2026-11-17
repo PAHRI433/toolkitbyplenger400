@@ -1,0 +1,16 @@
+{
+  "orig_number": 15,
+  "archive_file": "fb_gql_reg_ORIG15.py",
+  "archive_date": "2026-11-17 12:38:27",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "HIPOTESIS O : Fake Hardware Attestation",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 49658,
+  "lines": 1062,
+  "md5": "7729e4ee97ff6a1a5814a0c9e471a27a",
+  "git_hash": "018489b",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG15.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
