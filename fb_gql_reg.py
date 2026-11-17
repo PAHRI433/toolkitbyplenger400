@@ -843,16 +843,31 @@ class FBRegistrar:
         if not self.cookie_str:
             return None
             
-        # [EKSPERIMEN] Gunakan session dan UA yang sama persis dengan registrasi
         try:
             r = self.ses.get('https://mbasic.facebook.com/', allow_redirects=True, timeout=15)
             u = r.url.lower()
-            if 'checkpoint' in u:
+            body = r.text.lower()
+            
+            # Cek berdasarkan URL
+            if 'checkpoint' in u: return 'CHECKPOINT'
+            if 'confirm' in u: return 'UNCONFIRMED'
+            if 'login' in u or r.status_code != 200: return 'DIED'
+            
+            # [EKSPERIMEN] Cek berdasarkan HTML Body (deteksi Captcha/Human)
+            _captcha_keywords = [
+                'konfirmasikan bahwa anda adalah manusia',
+                'confirm that you are a human',
+                'security check',
+                'please confirm your identity',
+                'captcha',
+                'identitas anda'
+            ]
+            if any(kw in body for kw in _captcha_keywords):
                 return 'CHECKPOINT'
-            if 'confirm' in u:
-                return 'UNCONFIRMED'
-            if 'login' in u or r.status_code != 200:
-                return 'DIED'
+                
+            return 'LIVE'
+        except Exception:
+            return 'DIED'
             return 'LIVE'
         except Exception:
             return 'DIED'

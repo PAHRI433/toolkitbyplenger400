@@ -1,0 +1,16 @@
+{
+  "orig_number": 14,
+  "archive_file": "fb_gql_reg_ORIG14.py",
+  "archive_date": "2026-11-17 12:03:39",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Patch check_session (Anti-False Positive v2) : menyuruh check_session untuk membaca isi halaman (HTML), bukan cuma URL-nya. Kita akan mencari teks-teks yang menandakan Human Verification.",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 49128,
+  "lines": 1047,
+  "md5": "76e602b4a42307724d9c7581e4442bad",
+  "git_hash": "7e09c4d",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG14.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
