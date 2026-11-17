@@ -609,8 +609,8 @@ class FBRegistrar:
         }
         cip = {
             'email': self.EMAIL, 'aac': self.AAC, 'block_store_machine_id': '',
-            'lois_settings': {'lois_token': ''}, 'cloud_trust_token': None,
-            'zero_balance_state': '', 'network_bssid': None, 'accounts_list': [],
+            'lois_settings': {'lois_token': ''}, 'cloud_trust_token': '',
+            'zero_balance_state': '', 'network_bssid': '', 'accounts_list': [],
             'device_id': self.DID, 'family_device_id': self.DID,
             'was_headers_prefill_available': 0, 'was_headers_prefill_used': 0,
             'prefill_attempted_silent_auth': 0, 'has_rejected_rel': 0,
@@ -618,6 +618,16 @@ class FBRegistrar:
         }
         r = self._gql('com.bloks.www.bloks.caa.reg.async.contactpoint_email.async', sp, cip)
         ok = r.status_code == 200
+        
+        # [PATCH] Cek apakah ada error di dalam JSON
+        try:
+            js = r.json()
+            if "errors" in js:
+                print(f"\n\033[31m[FB-ERROR] ContactPoint Email Ditolak FB: {js['errors'][0]['message']}\033[0m")
+                return False
+        except:
+            pass
+
         if ok:
             self.CTX = self._extract_context(r.text) or self.CTX
             # [SENSOR DUMP] Simpan response jika CTX None
@@ -627,6 +637,7 @@ class FBRegistrar:
                 with open('data/debug/ctx_dump.txt', 'w', encoding='utf-8') as f_dump:
                     f_dump.write(r.text)
                 print("\n\033[31m[FB-SENSOR] CTX Gagal di-extract! Respons disimpan di data/debug/ctx_dump.txt\033[0m")
+                return False # Gagal, jangan lanjut ke password/create
         return ok
 
     def reg_password(self):

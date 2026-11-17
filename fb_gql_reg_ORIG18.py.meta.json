@@ -1,0 +1,16 @@
+{
+  "orig_number": 18,
+  "archive_file": "fb_gql_reg_ORIG18.py",
+  "archive_date": "2026-11-17 13:30:55",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Payload dan Error Handling",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 50333,
+  "lines": 1074,
+  "md5": "9d0b2b4294a297f76c2aa1d6e0b4e191",
+  "git_hash": "fa050ec",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG18.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
