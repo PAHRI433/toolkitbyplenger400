@@ -114,10 +114,7 @@ FB_PROVIDERS = [
 
 RESEND_LOCALES = ['id_ID', 'en_US', 'en_GB', 'ms_MY', 'ar_EG', 'hi_IN', 'vi_VN', 'th_TH', 'pt_BR', 'es_ES']
 
-DEFAULT_PHOTO = (
-    'https://z-m-scontent.fsub6-7.fna.fbcdn.net/v/t1.30497-1/'
-    '453178253_471506465671661_2781666950760530985_n.png?stp=dst-webp_s200x200'
-)
+DEFAULT_PHOTO = "" # [EKSPERIMEN] Kosongkan foto profil untuk uji anti-bot
 
 
 # ══════════════════════════════════════════════════════════════
