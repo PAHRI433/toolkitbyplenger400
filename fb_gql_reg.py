@@ -166,12 +166,13 @@ class FBRegistrar:
         # Session & headers
         self.ses = requests.Session(impersonate='chrome') if _CURL_CFFI else requests.Session()
         
-        # [PATCH PROXY] Tarik settingan Proxy dari deepseek_tes6su.py
+        # [PATCH PROXY FIX] Tarik settingan langsung dari script utama (__main__)
         try:
-            import deepseek_tes6su
-            if getattr(deepseek_tes6su, 'PROXY_MODE', False) and getattr(deepseek_tes6su, 'proxy_list', []):
-                import random
-                _proxy = random.choice(deepseek_tes6su.proxy_list)
+            import sys
+            import random
+            _main = sys.modules.get('__main__')
+            if _main and getattr(_main, 'PROXY_MODE', False) and getattr(_main, 'proxy_list', []):
+                _proxy = random.choice(_main.proxy_list)
                 self.ses.proxies = {"http": _proxy, "https": _proxy}
                 print(f"\n\033[36m[FB-PROXY] Berhasil menyambungkan Proxy: {_proxy}\033[0m")
             else:
