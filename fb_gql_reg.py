@@ -541,6 +541,13 @@ class FBRegistrar:
         }
         r = self._gql('com.bloks.www.bloks.caa.reg.name.async', sp, cip)
         ok = r.status_code == 200
+        
+        # [DUMP RESPONS] Simpan response reg_name untuk dianalisis
+        import os
+        os.makedirs('data/debug', exist_ok=True)
+        with open('data/debug/reg_name_dump.txt', 'w', encoding='utf-8') as f_dump:
+            f_dump.write(r.text)
+            
         if ok:
             self.CTX = self._extract_context(r.text) or self.CTX
             print(f"\n\033[36m[FB-SENSOR] CTX di reg_name: {str(self.CTX)[:15]}...\033[0m")

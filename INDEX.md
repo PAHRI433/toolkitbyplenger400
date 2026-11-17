@@ -33,3 +33,4 @@ di `fb_gql_reg_ORIG(n).py.meta.json`.
 | 18 | 2026-11-17 13:30:55 | Payload dan Error Handling | ✓ | - | fa050ec | 50333 | 1074 |
 | 19 | 2026-11-17 13:38:27 | Ekstraksi BLOKS_VID | ✓ | - | 6de102b | 50709 | 1085 |
 | 20 | 2026-11-17 13:47:11 | menambahkan sensor di fungsi reg_name_fb dan reg_name untuk  | ✓ | - | 95c7257 | 51088 | 1093 |
+| 21 | 2026-11-17 13:52:17 | Patch Dump reg_name | ✓ | - | 0dc640c | 51447 | 1100 |

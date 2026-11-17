@@ -1,0 +1,16 @@
+{
+  "orig_number": 21,
+  "archive_file": "fb_gql_reg_ORIG21.py",
+  "archive_date": "2026-11-17 13:52:17",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Patch Dump reg_name",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 51447,
+  "lines": 1100,
+  "md5": "fa88cf139ba45178134207934686b593",
+  "git_hash": "0dc640c",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG21.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
