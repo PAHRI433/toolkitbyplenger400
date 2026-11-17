@@ -668,6 +668,9 @@ class FBRegistrar:
         return ok
 
     def reg_create(self):
+        # [SENSOR MID] Cek apakah machine_id kosong atau terisi
+        print(f"\n\033[36m[FB-SENSOR] Machine ID (MID) sebelum Create: '{self.MID}'\033[0m")
+        
         if 'CAA_REG_SAVE_PASSWORD_CREDENTIALS' not in self.VISITED:
             self.VISITED.append('CAA_REG_SAVE_PASSWORD_CREDENTIALS')
         enc = self.ENC_PW or self._encrypt_password(self.PASSWORD)

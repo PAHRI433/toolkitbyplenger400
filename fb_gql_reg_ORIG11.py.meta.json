@@ -1,0 +1,16 @@
+{
+  "orig_number": 11,
+  "archive_file": "fb_gql_reg_ORIG11.py",
+  "archive_date": "2026-11-17 10:44:23",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Apply to patch Sensor MID",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 48933,
+  "lines": 1040,
+  "md5": "752c76a50f0affc53148bc42ef19eacc",
+  "git_hash": "b4f520b",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG11.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
