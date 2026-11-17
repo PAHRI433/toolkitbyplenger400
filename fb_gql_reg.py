@@ -439,6 +439,14 @@ class FBRegistrar:
             'network_bssid': None, 'machine_id': '', 'storage_api_machine_id': '',
         }
         r = self._gql('com.bloks.www.bloks_save_machine_id.async_controller', sp, cip)
+        # [SENSOR BLOKS] Cari bloks_versioning_id di respons awal
+        import re
+        match = re.search(r'bloks_versioning_id\":\"([a-f0-9]+)', r.text)
+        if match:
+            print(f"\n\033[32m[FB-SENSOR] BLOKS_VID BARU DITEMUKAN: {match.group(1)}\033[0m")
+        else:
+            print(f"\n\033[33m[FB-SENSOR] BLOKS_VID tidak ditemukan di respons awal.\033[0m")
+
         ok = r.status_code == 200
         if ok and not self.MID:
             try:

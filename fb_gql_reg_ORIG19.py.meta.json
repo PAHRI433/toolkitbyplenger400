@@ -1,0 +1,16 @@
+{
+  "orig_number": 19,
+  "archive_file": "fb_gql_reg_ORIG19.py",
+  "archive_date": "2026-11-17 13:38:27",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Ekstraksi BLOKS_VID",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 50709,
+  "lines": 1085,
+  "md5": "bf3a4b6a9895700c425a2d9ae86ec8f6",
+  "git_hash": "6de102b",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG19.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
