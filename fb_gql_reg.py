@@ -165,6 +165,20 @@ class FBRegistrar:
 
         # Session & headers
         self.ses = requests.Session(impersonate='chrome') if _CURL_CFFI else requests.Session()
+        
+        # [PATCH PROXY] Tarik settingan Proxy dari deepseek_tes6su.py
+        try:
+            import deepseek_tes6su
+            if getattr(deepseek_tes6su, 'PROXY_MODE', False) and getattr(deepseek_tes6su, 'proxy_list', []):
+                import random
+                _proxy = random.choice(deepseek_tes6su.proxy_list)
+                self.ses.proxies = {"http": _proxy, "https": _proxy}
+                print(f"\n\033[36m[FB-PROXY] Berhasil menyambungkan Proxy: {_proxy}\033[0m")
+            else:
+                print(f"\n\033[33m[FB-PROXY] Proxy Mode OFF. Pakai IP Lokal.\033[0m")
+        except Exception as e:
+            print(f"\n\033[31m[FB-PROXY] Gagal load proxy: {e}\033[0m")
+
         self.head = {}
 
         # Cookie & credential setelah sukses
