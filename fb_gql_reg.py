@@ -842,14 +842,10 @@ class FBRegistrar:
     def check_session(self):
         if not self.cookie_str:
             return None
-        s = std_requests.Session()
-        s.headers.update({'User-Agent': 'Mozilla/5.0 (Linux; Android 12; Infinix Note 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36'})
-        for item in self.cookie_str.split('; '):
-            k, _, v = item.partition('=')
-            if k:
-                s.cookies.set(k, v)
+            
+        # [EKSPERIMEN] Gunakan session dan UA yang sama persis dengan registrasi
         try:
-            r = s.get('https://mbasic.facebook.com/', allow_redirects=True, timeout=15)
+            r = self.ses.get('https://mbasic.facebook.com/', allow_redirects=True, timeout=15)
             u = r.url.lower()
             if 'checkpoint' in u:
                 return 'CHECKPOINT'
@@ -857,6 +853,9 @@ class FBRegistrar:
                 return 'UNCONFIRMED'
             if 'login' in u or r.status_code != 200:
                 return 'DIED'
+            return 'LIVE'
+        except Exception:
+            return 'DIED'
             return 'LIVE'
         except Exception:
             return 'DIED'

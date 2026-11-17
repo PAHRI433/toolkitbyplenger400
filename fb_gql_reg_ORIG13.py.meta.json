@@ -1,0 +1,16 @@
+{
+  "orig_number": 13,
+  "archive_file": "fb_gql_reg_ORIG13.py",
+  "archive_date": "2026-11-17 11:55:52",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Hipotesis F : ag mengubah check_session() agar menggunakan session yang sama persis (self.ses) dan UA yang sama persis (self.head) dengan yang digunakan saat registrasi. Kita tidak akan membuat session baru.",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 49299,
+  "lines": 1048,
+  "md5": "e4f915b8985c388a2dd6e47253cbb1e1",
+  "git_hash": "f9d29f2",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG13.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}
