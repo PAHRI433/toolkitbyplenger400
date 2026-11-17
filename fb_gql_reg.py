@@ -513,7 +513,11 @@ class FBRegistrar:
             'waterfall_id': self.WFID, 'cloud_trust_token': None, 'machine_id': self.MID,
         }
         r = self._gql_app('com.bloks.www.bloks.caa.reg.name_fb', sp, cip)
-        return r.status_code == 200
+        ok = r.status_code == 200
+        if ok:
+            self.CTX = self._extract_context(r.text) or self.CTX
+            print(f"\n\033[36m[FB-SENSOR] CTX di name_fb: {str(self.CTX)[:15]}...\033[0m")
+        return ok
 
     def reg_name(self):
         sp = {
@@ -537,6 +541,9 @@ class FBRegistrar:
         }
         r = self._gql('com.bloks.www.bloks.caa.reg.name.async', sp, cip)
         ok = r.status_code == 200
+        if ok:
+            self.CTX = self._extract_context(r.text) or self.CTX
+            print(f"\n\033[36m[FB-SENSOR] CTX di reg_name: {str(self.CTX)[:15]}...\033[0m")
         self.RI.update({'first_name': self.FIRST, 'last_name': self.LAST})
         return ok
 

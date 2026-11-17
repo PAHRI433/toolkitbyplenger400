@@ -32,3 +32,4 @@ di `fb_gql_reg_ORIG(n).py.meta.json`.
 | 17 | 2026-11-17 13:00:52 | Patch Sensor Dump HTML : reg_contactpoint_email ke dalam fil | ✓ | - | 64c05d5 | 49915 | 1067 |
 | 18 | 2026-11-17 13:30:55 | Payload dan Error Handling | ✓ | - | fa050ec | 50333 | 1074 |
 | 19 | 2026-11-17 13:38:27 | Ekstraksi BLOKS_VID | ✓ | - | 6de102b | 50709 | 1085 |
+| 20 | 2026-11-17 13:47:11 | menambahkan sensor di fungsi reg_name_fb dan reg_name untuk  | ✓ | - | 95c7257 | 51088 | 1093 |
