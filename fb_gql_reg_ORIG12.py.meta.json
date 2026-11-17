@@ -1,0 +1,16 @@
+{
+  "orig_number": 12,
+  "archive_file": "fb_gql_reg_ORIG12.py",
+  "archive_date": "2026-11-17 10:50:34",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Eksperimen Hipotesis E : menambahkan jeda waktu (delay) yang jauh lebih lama dan acak (mensimulasikan manusia yang berpikir dan mengetik).",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 49099,
+  "lines": 1043,
+  "md5": "cb400683ae96069590659e2881d43452",
+  "git_hash": "74976fd",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG12.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}

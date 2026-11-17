@@ -754,6 +754,11 @@ class FBRegistrar:
     # SUBMIT OTP (GraphQL — kunci utama patch ini)
     # ══════════════════════════════════════════════════════════
     def submit_otp(self, code, text_input_id=None):
+        import time
+        import random
+        # [EKSPERIMEN] Jeda 5-10 detik sebelum submit OTP (simulasi mikir/ngetik)
+        time.sleep(random.uniform(5.0, 10.0))
+
         # [FB-SENSOR] Bongkar UA asli yang dipakai nembak GraphQL FB
         _real_ua = self.head.get('user-agent', 'N/A')
         print(f"\n\033[35m[FB-SENSOR] UA yang dikirim ke Facebook saat Submit OTP:\033[0m\n{_real_ua}\n")
@@ -874,7 +879,7 @@ class FBRegistrar:
             (self.reg_password, 'password'),
         ]
         for func, label in steps:
-            time.sleep(random.uniform(1.5, 4.0))
+            time.sleep(random.uniform(6.0, 12.0)) # [EKSPERIMEN] Delay lambat
             try:
                 ok = func()
             except Exception as e:
