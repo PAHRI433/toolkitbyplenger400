@@ -1,0 +1,16 @@
+{
+  "orig_number": 16,
+  "archive_file": "fb_gql_reg_ORIG16.py",
+  "archive_date": "2026-11-17 12:55:19",
+  "source_before": "/data/data/com.termux/files/home/downloads/fb_gql_reg.py",
+  "source_after": "/sdcard/download/fb_gql_debug.py",
+  "features": "Sensor Reg Context",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 49624,
+  "lines": 1062,
+  "md5": "90b8e9cc0d8bdce2ee3ce898c265e997",
+  "git_hash": "9f242fb",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/fb_gql_reg_ORIG16.py /data/data/com.termux/files/home/downloads/fb_gql_reg.py"
+}

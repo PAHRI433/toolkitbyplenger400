@@ -712,6 +712,11 @@ class FBRegistrar:
             'cloud_trust_token': None, 'ck_id': '',
             'no_contact_perm_email_oauth_token': '', 'encrypted_msisdn': '',
         }
+        # [SENSOR CTX] Cek apakah CTX asli dari FB atau palsu (AX...)
+        _ctx_preview = str(self.CTX)[:20] if self.CTX else "None"
+        _is_fake = _ctx_preview.startswith("AX")
+        print(f"\n\033[36m[FB-SENSOR] Reg Context: {_ctx_preview}... | Fake? {_is_fake}\033[0m")
+        
         r = self._gql('com.bloks.www.bloks.caa.reg.create.account.async', sp, cip)
         ok = r.status_code == 200
 
