@@ -86,3 +86,22 @@ deepseek_tes[0-9]*.py
 
 # Pengecualian biar arsip auto-promote tetap ke-track
 !deepseek_tes6su_ORIG*.py
+
+# --- Deployment Cleanup ---
+data/
+Cookie/
+*.txt
+!requirements.txt
+*.json
+!package.json
+*.xlsx
+*.log
+*.bak*
+__pycache__/
+fb_gql_reg_EXPERIMENTAL*
+fb_gql_reg_FRANKENSTEIN*
+tes6su_promote.py
+deepseek_tes6su_ORIG*
+deepseek_tes6su.py.bak*
+fb_gql_reg_ORIG*
+*.meta.json

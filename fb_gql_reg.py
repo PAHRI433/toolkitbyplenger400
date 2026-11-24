@@ -114,7 +114,10 @@ FB_PROVIDERS = [
 
 RESEND_LOCALES = ['id_ID', 'en_US', 'en_GB', 'ms_MY', 'ar_EG', 'hi_IN', 'vi_VN', 'th_TH', 'pt_BR', 'es_ES']
 
-DEFAULT_PHOTO = "" # [EKSPERIMEN] Kosongkan foto profil untuk uji anti-bot
+DEFAULT_PHOTO = (
+    'https://z-m-scontent.fsub6-7.fna.fbcdn.net/v/t1.30497-1/'
+    '453178253_471506465671661_2781666950760530985_n.png?stp=dst-webp_s200x200'
+)
 
 
 # ══════════════════════════════════════════════════════════════
@@ -162,21 +165,6 @@ class FBRegistrar:
 
         # Session & headers
         self.ses = requests.Session(impersonate='chrome') if _CURL_CFFI else requests.Session()
-        
-        # [PATCH PROXY FIX] Tarik settingan langsung dari script utama (__main__)
-        try:
-            import sys
-            import random
-            _main = sys.modules.get('__main__')
-            if _main and getattr(_main, 'PROXY_MODE', False) and getattr(_main, 'proxy_list', []):
-                _proxy = random.choice(_main.proxy_list)
-                self.ses.proxies = {"http": _proxy, "https": _proxy}
-                print(f"\n\033[36m[FB-PROXY] Berhasil menyambungkan Proxy: {_proxy}\033[0m")
-            else:
-                print(f"\n\033[33m[FB-PROXY] Proxy Mode OFF. Pakai IP Lokal.\033[0m")
-        except Exception as e:
-            print(f"\n\033[31m[FB-PROXY] Gagal load proxy: {e}\033[0m")
-
         self.head = {}
 
         # Cookie & credential setelah sukses
@@ -439,14 +427,6 @@ class FBRegistrar:
             'network_bssid': None, 'machine_id': '', 'storage_api_machine_id': '',
         }
         r = self._gql('com.bloks.www.bloks_save_machine_id.async_controller', sp, cip)
-        # [SENSOR BLOKS] Cari bloks_versioning_id di respons awal
-        import re
-        match = re.search(r'bloks_versioning_id\":\"([a-f0-9]+)', r.text)
-        if match:
-            print(f"\n\033[32m[FB-SENSOR] BLOKS_VID BARU DITEMUKAN: {match.group(1)}\033[0m")
-        else:
-            print(f"\n\033[33m[FB-SENSOR] BLOKS_VID tidak ditemukan di respons awal.\033[0m")
-
         ok = r.status_code == 200
         if ok and not self.MID:
             try:
@@ -513,11 +493,7 @@ class FBRegistrar:
             'waterfall_id': self.WFID, 'cloud_trust_token': None, 'machine_id': self.MID,
         }
         r = self._gql_app('com.bloks.www.bloks.caa.reg.name_fb', sp, cip)
-        ok = r.status_code == 200
-        if ok:
-            self.CTX = self._extract_context(r.text) or self.CTX
-            print(f"\n\033[36m[FB-SENSOR] CTX di name_fb: {str(self.CTX)[:15]}...\033[0m")
-        return ok
+        return r.status_code == 200
 
     def reg_name(self):
         sp = {
@@ -541,16 +517,6 @@ class FBRegistrar:
         }
         r = self._gql('com.bloks.www.bloks.caa.reg.name.async', sp, cip)
         ok = r.status_code == 200
-        
-        # [DUMP RESPONS] Simpan response reg_name untuk dianalisis
-        import os
-        os.makedirs('data/debug', exist_ok=True)
-        with open('data/debug/reg_name_dump.txt', 'w', encoding='utf-8') as f_dump:
-            f_dump.write(r.text)
-            
-        if ok:
-            self.CTX = self._extract_context(r.text) or self.CTX
-            print(f"\n\033[36m[FB-SENSOR] CTX di reg_name: {str(self.CTX)[:15]}...\033[0m")
         self.RI.update({'first_name': self.FIRST, 'last_name': self.LAST})
         return ok
 
@@ -631,8 +597,8 @@ class FBRegistrar:
         }
         cip = {
             'email': self.EMAIL, 'aac': self.AAC, 'block_store_machine_id': '',
-            'lois_settings': {'lois_token': ''}, 'cloud_trust_token': '',
-            'zero_balance_state': '', 'network_bssid': '', 'accounts_list': [],
+            'lois_settings': {'lois_token': ''}, 'cloud_trust_token': None,
+            'zero_balance_state': '', 'network_bssid': None, 'accounts_list': [],
             'device_id': self.DID, 'family_device_id': self.DID,
             'was_headers_prefill_available': 0, 'was_headers_prefill_used': 0,
             'prefill_attempted_silent_auth': 0, 'has_rejected_rel': 0,
@@ -640,26 +606,8 @@ class FBRegistrar:
         }
         r = self._gql('com.bloks.www.bloks.caa.reg.async.contactpoint_email.async', sp, cip)
         ok = r.status_code == 200
-        
-        # [PATCH] Cek apakah ada error di dalam JSON
-        try:
-            js = r.json()
-            if "errors" in js:
-                print(f"\n\033[31m[FB-ERROR] ContactPoint Email Ditolak FB: {js['errors'][0]['message']}\033[0m")
-                return False
-        except:
-            pass
-
         if ok:
             self.CTX = self._extract_context(r.text) or self.CTX
-            # [SENSOR DUMP] Simpan response jika CTX None
-            if not self.CTX:
-                import os
-                os.makedirs('data/debug', exist_ok=True)
-                with open('data/debug/ctx_dump.txt', 'w', encoding='utf-8') as f_dump:
-                    f_dump.write(r.text)
-                print("\n\033[31m[FB-SENSOR] CTX Gagal di-extract! Respons disimpan di data/debug/ctx_dump.txt\033[0m")
-                return False # Gagal, jangan lanjut ke password/create
         return ok
 
     def reg_password(self):
@@ -686,7 +634,7 @@ class FBRegistrar:
         cip = {
             'safetynet_response': '', 'caa_play_integrity_attestation_result': '',
             'aac': self.AAC,
-            'safetynet_token': '', # [EKSPERIMEN] Kosongkan token SafetyNet palsu
+            'safetynet_token': base64.b64encode(f'unknown|{int(time.time())}|'.encode() + os.urandom(24)).decode(),
             'zero_balance_state': '', 'network_bssid': None,
             'machine_id': self.MID, 'headers_last_infra_flow_id_safetynet': '',
             'system_permissions_status': {'READ_CONTACTS': 'UNKNOWN', 'GET_ACCOUNTS': 'UNKNOWN',
@@ -708,9 +656,6 @@ class FBRegistrar:
         return ok
 
     def reg_create(self):
-        # [SENSOR MID] Cek apakah machine_id kosong atau terisi
-        print(f"\n\033[36m[FB-SENSOR] Machine ID (MID) sebelum Create: '{self.MID}'\033[0m")
-        
         if 'CAA_REG_SAVE_PASSWORD_CREDENTIALS' not in self.VISITED:
             self.VISITED.append('CAA_REG_SAVE_PASSWORD_CREDENTIALS')
         enc = self.ENC_PW or self._encrypt_password(self.PASSWORD)
@@ -752,11 +697,6 @@ class FBRegistrar:
             'cloud_trust_token': None, 'ck_id': '',
             'no_contact_perm_email_oauth_token': '', 'encrypted_msisdn': '',
         }
-        # [SENSOR CTX] Cek apakah CTX asli dari FB atau palsu (AX...)
-        _ctx_preview = str(self.CTX)[:20] if self.CTX else "None"
-        _is_fake = _ctx_preview.startswith("AX")
-        print(f"\n\033[36m[FB-SENSOR] Reg Context: {_ctx_preview}... | Fake? {_is_fake}\033[0m")
-        
         r = self._gql('com.bloks.www.bloks.caa.reg.create.account.async', sp, cip)
         ok = r.status_code == 200
 
@@ -799,11 +739,6 @@ class FBRegistrar:
     # SUBMIT OTP (GraphQL — kunci utama patch ini)
     # ══════════════════════════════════════════════════════════
     def submit_otp(self, code, text_input_id=None):
-        import time
-        import random
-        # [EKSPERIMEN] Jeda 5-10 detik sebelum submit OTP (simulasi mikir/ngetik)
-        time.sleep(random.uniform(5.0, 10.0))
-
         # [FB-SENSOR] Bongkar UA asli yang dipakai nembak GraphQL FB
         _real_ua = self.head.get('user-agent', 'N/A')
         print(f"\n\033[35m[FB-SENSOR] UA yang dikirim ke Facebook saat Submit OTP:\033[0m\n{_real_ua}\n")
@@ -887,35 +822,21 @@ class FBRegistrar:
     def check_session(self):
         if not self.cookie_str:
             return None
-            
+        s = std_requests.Session()
+        s.headers.update({'User-Agent': 'Mozilla/5.0 (Linux; Android 12; Infinix Note 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Mobile Safari/537.36'})
+        for item in self.cookie_str.split('; '):
+            k, _, v = item.partition('=')
+            if k:
+                s.cookies.set(k, v)
         try:
-            r = self.ses.get('https://mbasic.facebook.com/', allow_redirects=True, timeout=15)
+            r = s.get('https://mbasic.facebook.com/', allow_redirects=True, timeout=15)
             u = r.url.lower()
-            body = r.text.lower()
-            
-            # Cek berdasarkan URL
-            if 'checkpoint' in u: return 'CHECKPOINT'
-            if 'confirm' in u: return 'UNCONFIRMED'
-            if 'login' in u or r.status_code != 200: return 'DIED'
-            
-            # [EKSPERIMEN] Cek berdasarkan HTML Body (deteksi Captcha/Human)
-            _captcha_keywords = [
-                'konfirmasikan bahwa anda adalah manusia',
-                'confirm that you are a human',
-                'security check',
-                'please confirm your identity',
-                'captcha',
-                'identitas anda'
-            ]
-            if any(kw in body for kw in _captcha_keywords):
+            if 'checkpoint' in u:
                 return 'CHECKPOINT'
-                
-            return 'LIVE'
-        except Exception:
-            return 'DIED'
-            return 'LIVE'
-        except Exception:
-            return 'DIED'
+            if 'confirm' in u:
+                return 'UNCONFIRMED'
+            if 'login' in u or r.status_code != 200:
+                return 'DIED'
             return 'LIVE'
         except Exception:
             return 'DIED'
@@ -938,7 +859,7 @@ class FBRegistrar:
             (self.reg_password, 'password'),
         ]
         for func, label in steps:
-            time.sleep(random.uniform(6.0, 12.0)) # [EKSPERIMEN] Delay lambat
+            time.sleep(random.uniform(1.5, 4.0))
             try:
                 ok = func()
             except Exception as e:
