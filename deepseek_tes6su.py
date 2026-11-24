@@ -1565,6 +1565,20 @@ def create_account(full_name, email, password, gender, use_phone=False, locale_c
     if ENABLE_TOTP_2FA and uid:
         totp_key = enable_totp_2fa(uid, fb_cookies, thread_sess=thread_sess)
 
+    # ── [AUTO 2FA] Post-Registration ──
+    totp_key = None
+    if AUTO_2FA_ENABLED and _verified:
+        try:
+            print_status("Memulai Auto-2FA (TOTP)...", "loading")
+            _ua = headers.get('User-Agent', ua)
+            success_2fa, totp_key = enable_totp_2fa(uid, fb_cookies, password, _ua)
+            if success_2fa:
+                print_status(f"✓ 2FA Aktif! Key: {totp_key}", "success")
+            else:
+                print_status("⚠ Gagal mengaktifkan 2FA", "warn")
+        except Exception as e:
+            print_status(f"⚠ 2FA Error: {e}", "warn")
+
     # ── Simpan JSON ──
     os.makedirs('data/result/create', exist_ok=True)
     result_data = {
@@ -1575,6 +1589,7 @@ def create_account(full_name, email, password, gender, use_phone=False, locale_c
         "cookies_raw": fb_cookies,
         "verified": _verified,
         "status": status,
+        "2fa_key": totp_key,
         "waktu": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
     if totp_key:
@@ -1666,8 +1681,8 @@ def save_to_xlsx(accounts, filepath=None):
     fill_even = PatternFill("solid", fgColor="EBF3FF")
     fill_odd = PatternFill("solid", fgColor="FFFFFF")
 
-    headers_row = ["UID", "Password", "Cookies", "Email"]
-    col_widths = [22, 20, 80, 35]
+    headers_row = ["UID", "Password", "Cookies", "Email", "2FA Key"]
+    col_widths = [22, 20, 80, 35, 35]
 
     def _write_sheet(ws, data_list):
         ws.row_dimensions[1].height = 22
@@ -2405,7 +2420,9 @@ session = create_session_with_retry()
 tanggal = datetime.now().strftime("%d-%m-%Y")
 ok_count = 0
 ok_count_lock = threading.Lock()
+from fb_a2f import enable_totp_2fa
 DEFAULT_PASSWORD = "jakarta@91"
+AUTO_2FA_ENABLED = False
 default_password_lock = threading.Lock()
 
 PROXY_MODE = False
@@ -2612,9 +2629,10 @@ def main():
     print_button("🌐 [UNUSED] Toggle OTP User-Agent", "16", "secondary")
     print_button("📦 Promote fb_gql_debug → fb_gql_reg", "17", "action")
     print_button("📦 Promote tes6su_promote → deepseek_tes6su", "18", "action")
+    print_button("🔐 Toggle Auto 2FA (Post-Register)", "19", "secondary")
     print_button("Exit", "4", "secondary")
 
-    choice = print_input_field("Choose Option", "[1-18]")
+    choice = print_input_field("Choose Option", "[1-19]")
 
     if choice == '3':
         with proxy_mode_lock:
@@ -2837,6 +2855,15 @@ def main():
                 promote_gql()
             except Exception as e:
                 print_status(f"Promote error: {e}", "error")
+        input("\nEnter...")
+        main()
+        return
+
+    if choice == '19':
+        global AUTO_2FA_ENABLED
+        AUTO_2FA_ENABLED = not AUTO_2FA_ENABLED
+        status = "ON" if AUTO_2FA_ENABLED else "OFF"
+        print_status(f"Auto 2FA (Post-Register): {status}", "success" if AUTO_2FA_ENABLED else "warn")
         input("\nEnter...")
         main()
         return

@@ -1,0 +1,16 @@
+{
+  "orig_number": 5,
+  "archive_file": "deepseek_tes6su_ORIG5.py",
+  "archive_date": "2026-11-24 13:19:08",
+  "source_before": "/data/data/com.termux/files/home/downloads/deepseek_tes6su.py",
+  "source_after": "/sdcard/download/transcripts/tes6su_promote.py",
+  "features": "feat: Auto-2FA Post-Registration (TOTP)",
+  "tested": true,
+  "breaking_changes": false,
+  "size_bytes": 106391,
+  "lines": 2859,
+  "md5": "0ce13b974f91c2274eb36b487f4ab5dc",
+  "git_hash": "2e44c4e",
+  "syntax_check": "OK",
+  "rollback_cmd": "cp /data/data/com.termux/files/home/downloads/deepseek_tes6su_ORIG5.py /data/data/com.termux/files/home/downloads/deepseek_tes6su.py"
+}
